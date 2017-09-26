@@ -12,15 +12,14 @@ namespace Todo_Mvc.Controllers
     {
         public IActionResult Index()
         {
-          var x = Todo.GetAll();
-          return View("Todos", x);
+          // var x = Todo.GetAll();
+          return View();
         }
 
         public IActionResult Create(string task)
         {
-            // Todo.Create(task);
-
-            return View();
+            Todo.Create(task);
+            return RedirectToAction("Index");
         }
 
         public IActionResult Contact()
