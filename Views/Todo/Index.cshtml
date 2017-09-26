@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "Todos";
+}
+@model List<Todo_Mvc.Models.Todo>
+<div>
+  <h2>Todos</h2>
+  <form asp-action="Create" asp-controller="Todo">
+  <input placeholder="new task" name="Task">
+  <input type="submit"> submit task </input>
+  </form>
+  <ul>
+    @foreach (var todo in Model) 
+    {
+      <li>
+        <label>@todo.Task</label>
+      </li>
+    }
+  </ul>
+</div>
