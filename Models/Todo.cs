@@ -39,28 +39,34 @@ namespace Todo_Mvc.Models
             } catch (Exception e){
               Console.WriteLine(e.ToString());
             }
-            List<string> returnList = new List<string>();
+            List<string> returnStrings = new List<string>();
+            List<bool> returnBools = new List<bool>();
             using (var cmd = new NpgsqlCommand("SELECT * FROM todos", Conn)){
               // cmd.ExecuteNonQuery();
               NpgsqlDataReader dr = cmd.ExecuteReader();
               while(dr.Read()) {
-                  returnList.Add(dr.GetString(1));
-                  
+                  returnStrings.Add(dr.GetString(1));
+                  // Console.WriteLine(dr.GetBoolean(2));
+                  returnBools.Add(dr.GetBoolean(2));
+
                 }
-                // Console.WriteLine(dr[1].GetType());
-                // Todo x = new Todo();
-                // Console.WriteLine(dr);
-                // x.Task = dr[1];
-                // GlobalVariables.Todos.Add(x);
               }
               Console.WriteLine("done");
-              foreach(string s in returnList){
+              int i = 0;
+              foreach(string s in returnStrings){
                 Todo x = new Todo();
                 x.Task = s;
+                x.Completed = returnBools[i];
                 GlobalVariables.Todos.Add(x);
                 Console.WriteLine(s);
+                i++;
               }
-              
+              // for(var i = 0; i < returnStrings.Count; i++){
+                
+                // GlobalVariables.Todos[i].Completed = returnBools[i];
+                // GlobalVariables.Todos.Add(x);
+                // Console.WriteLine(returnBools[i]);
+              // }
 
             }
           // }
