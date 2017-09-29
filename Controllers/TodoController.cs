@@ -13,6 +13,7 @@ namespace Todo_Mvc.Controllers
         public IActionResult Index()
         {
           // var x = Todo.GetAll();
+          View.RemoveAll();
           return View(Todo.GetAll());
         }
 
@@ -20,6 +21,11 @@ namespace Todo_Mvc.Controllers
         {
             Todo.Create(task);
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Delete(int Id){
+          Todo.Delete(Id);
+          return RedirectToAction("Index");
         }
 
         public IActionResult Contact()

@@ -12,6 +12,7 @@
     @foreach (var todo in Model) 
     {
       <li>
+        <h1>ID: @todo.Id</h1>
         <label>@todo.Task</label>
         <label>@todo.Completed</label>
         <button asp-action="Delete" asp-controller="Todo">Delete Task</button>

@@ -10,6 +10,8 @@ namespace Todo_Mvc.Models
         public string Task { get; set; }
         public bool Completed { get; set; } = false;
 
+        public int Id {get; set; }
+
         public static void Create(string TaskText){
           var task = new Todo();
           string ConnString = "Host=tantor.db.elephantsql.com;Username=whiptylt;Password=uLlB5fEK9y_Q82cNj8daLMRtSzys03jf;Database=whiptylt";
@@ -19,9 +21,12 @@ namespace Todo_Mvc.Models
             } catch (Exception e){
               Console.WriteLine(e.ToString());
             }
-            using (var cmd = new NpgsqlCommand(string.Format("INSERT INTO todos (task) values ('{0}')", TaskText), Conn)){
+            using (var cmd = new NpgsqlCommand(string.Format("INSERT INTO todos (task) values ('{0}') returning id", TaskText), Conn)){
               cmd.ExecuteNonQuery();
-              Console.WriteLine("done");
+              NpgsqlDataReader reader = cmd.ExecuteReader();
+              while(reader.Read()){
+                task.Id = reader.GetInt32(0);
+              }
               
 
             }
@@ -30,7 +35,7 @@ namespace Todo_Mvc.Models
           GlobalVariables.Todos.Add(task);
         }
         
-        public static void Delete(Todo Task){
+        public static void Delete(int Id){
           string ConnString = "Host=tantor.db.elephantsql.com;Username=whiptylt;Password=uLlB5fEK9y_Q82cNj8daLMRtSzys03jf;Database=whiptylt";
           using(NpgsqlConnection Conn = new NpgsqlConnection(ConnString)){
             try{
@@ -38,15 +43,14 @@ namespace Todo_Mvc.Models
             } catch (Exception e){
               Console.WriteLine(e.ToString());
             }
-            using (var cmd = new NpgsqlCommand(string.Format("Delete From todos where task = '{0}'", Task.Task), Conn)){
+            using (var cmd = new NpgsqlCommand(string.Format("Delete From todos where id = '{0}'", Id), Conn)){
               cmd.ExecuteNonQuery();
-              Console.WriteLine("done");
             }
           }
-          GlobalVariables.Todos.Remove(Task);
-
+          GlobalVariables.Todos.RemoveAll(x => x.Id != Id);
+          
         }
-        }
+        
 
         public static System.Collections.Generic.List<Todo> GetAll(){
 
@@ -59,39 +63,29 @@ namespace Todo_Mvc.Models
             }
             List<string> returnStrings = new List<string>();
             List<bool> returnBools = new List<bool>();
+            List<int> returnInts = new List<int>();
             using (var cmd = new NpgsqlCommand("SELECT * FROM todos", Conn)){
               // cmd.ExecuteNonQuery();
               NpgsqlDataReader dr = cmd.ExecuteReader();
               while(dr.Read()) {
+                  returnInts.Add(dr.GetInt32(0));
                   returnStrings.Add(dr.GetString(1));
-                  // Console.WriteLine(dr.GetBoolean(2));
                   returnBools.Add(dr.GetBoolean(2));
 
                 }
               }
-              Console.WriteLine("done");
               int i = 0;
               foreach(string s in returnStrings){
                 Todo x = new Todo();
                 x.Task = s;
+                x.Id = returnInts[i];
                 x.Completed = returnBools[i];
                 GlobalVariables.Todos.Add(x);
-                Console.WriteLine(s);
                 i++;
               }
-              // for(var i = 0; i < returnStrings.Count; i++){
-                
-                // GlobalVariables.Todos[i].Completed = returnBools[i];
-                // GlobalVariables.Todos.Add(x);
-                // Console.WriteLine(returnBools[i]);
-              // }
 
             }
-          // }
-          // GlobalVariables.foreach()
-        Console.WriteLine(GlobalVariables.Todos);
           return GlobalVariables.Todos;
         }
-        // public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
     }
 }
