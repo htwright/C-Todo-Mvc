@@ -74,6 +74,7 @@ namespace Todo_Mvc.Models
 
                 }
               }
+              GlobalVariables.Todos = new List<Todo>();
               int i = 0;
               foreach(string s in returnStrings){
                 Todo x = new Todo();
