@@ -29,6 +29,24 @@ namespace Todo_Mvc.Models
           task.Task = TaskText;
           GlobalVariables.Todos.Add(task);
         }
+        
+        public static void Delete(Todo Task){
+          string ConnString = "Host=tantor.db.elephantsql.com;Username=whiptylt;Password=uLlB5fEK9y_Q82cNj8daLMRtSzys03jf;Database=whiptylt";
+          using(NpgsqlConnection Conn = new NpgsqlConnection(ConnString)){
+            try{
+              Conn.Open();
+            } catch (Exception e){
+              Console.WriteLine(e.ToString());
+            }
+            using (var cmd = new NpgsqlCommand(string.Format("Delete From todos where task = '{0}'", Task.Task), Conn)){
+              cmd.ExecuteNonQuery();
+              Console.WriteLine("done");
+            }
+          }
+          GlobalVariables.Todos.Remove(Task);
+
+        }
+        }
 
         public static System.Collections.Generic.List<Todo> GetAll(){
 
