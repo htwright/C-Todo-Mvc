@@ -65,7 +65,6 @@ namespace Todo_Mvc.Models
             List<bool> returnBools = new List<bool>();
             List<int> returnInts = new List<int>();
             using (var cmd = new NpgsqlCommand("SELECT * FROM todos", Conn)){
-              // cmd.ExecuteNonQuery();
               NpgsqlDataReader dr = cmd.ExecuteReader();
               while(dr.Read()) {
                   returnInts.Add(dr.GetInt32(0));
