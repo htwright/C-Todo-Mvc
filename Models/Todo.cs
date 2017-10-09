@@ -14,6 +14,7 @@ namespace Todo_Mvc.Models
 
         public static void Create(string TaskText){
           var task = new Todo();
+          Console.WriteLine("creating");
           string ConnString = "Host=tantor.db.elephantsql.com;Username=whiptylt;Password=uLlB5fEK9y_Q82cNj8daLMRtSzys03jf;Database=whiptylt";
           using(NpgsqlConnection Conn = new NpgsqlConnection(ConnString)){
             try{
@@ -31,8 +32,8 @@ namespace Todo_Mvc.Models
 
             }
           }
-          task.Task = TaskText;
-          GlobalVariables.Todos.Add(task);
+          // task.Task = TaskText;
+          // GlobalVariables.Todos.Add(task);
         }
         
         public static void Delete(int Id){
@@ -52,7 +53,7 @@ namespace Todo_Mvc.Models
         }
         
 
-        public static System.Collections.Generic.List<Todo> GetAll(){
+        public static List<Todo> GetAll(){
 
           string ConnString = "Host=tantor.db.elephantsql.com;Username=whiptylt;Password=uLlB5fEK9y_Q82cNj8daLMRtSzys03jf;Database=whiptylt";
           using(NpgsqlConnection Conn = new NpgsqlConnection(ConnString)){
